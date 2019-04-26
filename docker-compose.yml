@@ -1,0 +1,16 @@
+version: "2"
+services:
+  multicast_http:
+    build:
+      context: .
+    command: go run main.go
+    volumes:
+      - ./src:/go/src/app
+    working_dir: /go/src/app
+    ports:
+      - 8080:80
+    environment:
+      MULTICAST_HTTP_HEADER: My-Custom_header
+      MULTICAST_HTTP_HEADER_VALUE: any_header
+      MULTICAST_HTTP_HOSTS: yandex.ru,https://google.ru
+      MULTICAST_HTTP_DEBUG: 1
