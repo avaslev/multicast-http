@@ -1,12 +1,13 @@
 version: "2"
 services:
-  multicast_http:
+  dev:
     build:
       context: .
+      args:
+        builder: 'false'
     command: go run main.go
     volumes:
-      - ./src:/go/src/app
-    working_dir: /go/src/app
+      - ./:/go
     ports:
       - 8080:80
     environment:
@@ -14,3 +15,17 @@ services:
       MULTICAST_HTTP_HEADER_VALUE: any_header
       MULTICAST_HTTP_HOSTS: yandex.ru,https://google.ru
       MULTICAST_HTTP_DEBUG: 1
+      # MULTICAST_HTTP_K8S_POD_LABEL: 'app: test'
+      # MULTICAST_HTTP_K8S_POD_PORT: 8080
+  prod:
+    build:
+      context: .
+    ports:
+      - 8080:80
+    environment:
+      MULTICAST_HTTP_HEADER: My-Custom_header
+      MULTICAST_HTTP_HEADER_VALUE: any_header
+      MULTICAST_HTTP_HOSTS: yandex.ru,https://google.ru
+      MULTICAST_HTTP_DEBUG: 1
+      # MULTICAST_HTTP_K8S_POD_LABEL: 'app: test'
+      # MULTICAST_HTTP_K8S_POD_PORT: 8080

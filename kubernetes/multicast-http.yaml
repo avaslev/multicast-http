@@ -1,0 +1,67 @@
+# ------------------- Service Account ------------------- #
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: multicast-http
+
+---
+# -------------------  Role & Role Binding ------------------- #
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: multicast-http
+rules:
+  # Allow to get list pods/
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: multicast-http
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: multicast-http
+subjects:
+- kind: ServiceAccount
+  name: multicast-http
+
+---
+# ------------------- Deployment ------------------- #
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: multicast-http
+spec:
+  selector:
+    matchLabels:
+      app: multicast-http
+  replicas: 1
+  template:
+    metadata:
+      name: multicast-http
+      labels:
+        app: multicast-http
+    spec:
+      containers:
+      - name: multicast-http
+        image: avaslev/multicast-http
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        env:
+        - name: MULTICAST_HTTP_HEADER
+          value: Multicast-Header
+        - name: MULTICAST_HTTP_HEADER_VALUE
+          value: 'multicast'
+        # - name: MULTICAST_HTTP_K8S_POD_LABEL
+        #   value: 'app: service' ## set your pod label 
+      serviceAccountName: multicast-http
+
+---
