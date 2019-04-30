@@ -65,3 +65,19 @@ spec:
       serviceAccountName: multicast-http
 
 ---
+  # ------------------- Service ------------------- #
+  
+kind: Service
+apiVersion: v1
+metadata:
+  name: multicast-http
+spec:
+  clusterIP: None
+  selector:
+    app: multicast-http
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
