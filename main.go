@@ -4,7 +4,7 @@ import (
 	"log"
     "net/http"
     "fmt"
-    "multicast"
+    "github.com/avaslev/multicast-http/src/multicast"
 )
 
 func handleRequest(res http.ResponseWriter, req *http.Request) {

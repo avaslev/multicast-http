@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
     "fmt"
-    "resolver"
+    "github.com/avaslev/multicast-http/src/resolver"
 )
 
 func HandleRequest(res http.ResponseWriter, req *http.Request) {

@@ -5,7 +5,7 @@ LABEL Maintainer="Alexey Vasilyev <alex@onlamp.ru>" \
 ARG builder='true'
 
 RUN apk update \
-        && apk add --no-cache musl-dev go 
+        && apk add --no-cache musl-dev go git
 
 # Configure Go
 ENV GOROOT /usr/lib/go
@@ -25,7 +25,7 @@ RUN if [ ${builder} == 'true' ]; then \
         && ls $GOPATH | grep -v bin | xargs rm -rf \
         && rm -rf $GOPATH/.[^.]*\
         && apk update \
-        && apk del go musl-dev \
+        && apk del go musl-dev git \
 ;fi
 
 EXPOSE 80
