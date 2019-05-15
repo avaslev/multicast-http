@@ -4,9 +4,6 @@ LABEL Maintainer="Alexey Vasilyev <alex@onlamp.ru>" \
 
 ARG builder='true'
 
-RUN apk update \
-        && apk add --no-cache musl-dev go git
-
 # Configure Go
 ENV GOROOT /usr/lib/go
 ENV GOPATH /go
@@ -19,14 +16,17 @@ ENV MULTICAST_HTTP_DEBUG 0
 COPY . $GOPATH
 WORKDIR $GOPATH
 
-# Build and cleanup
-RUN if [ ${builder} == 'true' ]; then \
-        go install main.go \
-        && ls $GOPATH | grep -v bin | xargs rm -rf \
-        && rm -rf $GOPATH/.[^.]*\
-        && apk update \
-        && apk del go musl-dev git \
-;fi
+RUN apk update \
+        && apk add --no-cache musl-dev go git \
+        && if [ ${builder} == 'true' ]; then \
+                go get \
+                && go install main.go \
+                && ls $GOPATH | grep -v bin | xargs rm -rf \
+                && rm -rf $GOPATH/.[^.]*\
+                && apk update \
+                && apk del go musl-dev git \
+                && rm -rf /tmp/* \
+        ;fi
 
 EXPOSE 80
 
